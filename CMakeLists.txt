@@ -3,8 +3,8 @@ project(io_system_simulation)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(io_simulation
-    src/device_driver.cpp
-    src/io_dispatcher.cpp
-    src/main.cpp
-)
+include_directories(${CMAKE_SOURCE_DIR}/include)
+
+file(GLOB SOURCES "src/*.cpp")
+
+add_executable(io_simulation ${SOURCES})
