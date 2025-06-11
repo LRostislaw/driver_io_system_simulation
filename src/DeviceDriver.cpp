@@ -1,9 +1,13 @@
 #include "DeviceDriver.h"
+#include <cstdlib>
+#include <ctime>
 
-DeviceDriver::DeviceDriver() : deviceTime(0), requestCount(0) {
+// Конструктор
+DeviceDriver::DeviceDriver() : deviceTime(0) {
     std::srand(std::time(nullptr));
 }
 
+// Деструктор
 DeviceDriver::~DeviceDriver() {
     while (!requestQueue.empty()) {
         delete requestQueue.front();
@@ -11,39 +15,74 @@ DeviceDriver::~DeviceDriver() {
     }
 }
 
+// Инициализация устройства
 void DeviceDriver::initializeIO() {
-    deviceTime = std::rand() % 5 + 1; // случайное время работы устройства от 1 до 5
-    std::cout << "[Драйвер] Инициализация устройства. Время работы: " << deviceTime << " единиц.\n";
+    deviceTime = std::rand() % 5 + 1; // 1-5
+    printDeviceStatus("Инициализация устройства", 
+                      "Время работы: " + std::to_string(deviceTime) + " единиц");
 }
 
+// Обработка прерывания (завершение операции)
 void DeviceDriver::handleInterrupt() {
     if (requestQueue.empty()) {
-        std::cout << "[Драйвер] Нет запросов для обработки.\n";
+        printDeviceStatus("Нет запросов для обработки");
         return;
     }
     IORequest* request = getNextRequest();
-    std::cout << "[Драйвер] Завершение операции IO с запросом ID: " << request->id << "\n";
-    delete request; // удаляем завершённый запрос
+    printDeviceStatus("Завершение операции", "ID: " + std::to_string(request->id));
+    delete request;
+
     if (!requestQueue.empty()) {
-        initializeIO(); // инициируем следующую операцию
+        initializeIO();
     } else {
-        std::cout << "[Драйвер] Очередь запросов пуста.\n";
+        printDeviceStatus("Очередь запросов пуста");
     }
 }
 
+// Добавление запроса
 void DeviceDriver::addRequest(IORequest* request) {
     bool wasEmpty = requestQueue.empty();
     requestQueue.push(request);
-    std::cout << "[Драйвер] Добавлен запрос ID: " << request->id << " в очередь.\n";
+    printDeviceStatus("Добавлен запрос", "ID: " + std::to_string(request->id));
     if (wasEmpty) {
         initializeIO();
     }
 }
 
+// Проверка наличия запросов
 bool DeviceDriver::hasPendingRequests() const {
     return !requestQueue.empty();
 }
 
+// Вывод очереди запросов
+void DeviceDriver::printQueue() const {
+    std::cout << "┌───────────────────────┐\n";
+    std::cout << "│  Очередь запросов:    │\n";
+
+    if (requestQueue.empty()) {
+        std::cout << "│  └── (пусто)          │\n";
+    } else {
+        std::queue<IORequest*> temp = requestQueue;
+        while (!temp.empty()) {
+            temp.front()->print();
+            temp.pop();
+        }
+    }
+    std::cout << "└───────────────────────┘\n";
+}
+
+// Внутренний вывод статуса устройства
+void DeviceDriver::printDeviceStatus(const std::string& action, const std::string& details) const {
+    std::cout << "\n╭── Драйвер устройства ──\n";
+    std::cout << "│  " << std::left << std::setw(18) << action;
+    if (!details.empty()) {
+        std::cout << ": " << details;
+    }
+    std::cout << "\n╰────────────────────────\n";
+    printQueue();
+}
+
+// Получить следующий запрос из очереди
 IORequest* DeviceDriver::getNextRequest() {
     if (requestQueue.empty()) return nullptr;
     IORequest* request = requestQueue.front();

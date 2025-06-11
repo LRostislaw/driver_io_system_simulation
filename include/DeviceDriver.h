@@ -3,26 +3,25 @@
 
 #include "IORequest.h"
 #include <queue>
-#include <cstdlib>
-#include <ctime>
+#include <string>
 
 class DeviceDriver {
-public:
-    using RequestQueue = std::queue<IORequest*>;
+    std::queue<IORequest*> requestQueue;
+    int deviceTime;
 
+public:
     DeviceDriver();
     ~DeviceDriver();
 
-    void initializeIO(); // инициализация ввода-вывода
-    void handleInterrupt(); // обработка прерывания
-    void addRequest(IORequest* request); // добавление запроса в очередь
-    bool hasPendingRequests() const; // есть ли запросы
-    IORequest* getNextRequest(); // получить следующий запрос
+    void initializeIO();
+    void handleInterrupt();
+    void addRequest(IORequest* request);
+    bool hasPendingRequests() const;
+    void printQueue() const;
 
 private:
-    RequestQueue requestQueue;
-    int deviceTime; // случайное время работы устройства
-    int requestCount; // счетчик запросов
+    IORequest* getNextRequest();
+    void printDeviceStatus(const std::string& action, const std::string& details = "") const;
 };
 
-#endif // DEVICEDRIVER_H
+#endif

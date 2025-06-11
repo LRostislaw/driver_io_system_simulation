@@ -2,6 +2,6 @@
 
 int main() {
     Dispatcher dispatcher;
-    dispatcher.run(); // запуск моделирования
+    dispatcher.run(3);
     return 0;
 }
