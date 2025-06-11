@@ -2,12 +2,10 @@
 #include <cstdlib>
 #include <ctime>
 
-// Конструктор
 DeviceDriver::DeviceDriver() : deviceTime(0) {
     std::srand(std::time(nullptr));
 }
 
-// Деструктор
 DeviceDriver::~DeviceDriver() {
     while (!requestQueue.empty()) {
         delete requestQueue.front();
@@ -22,7 +20,7 @@ void DeviceDriver::initializeIO() {
                       "Время работы: " + std::to_string(deviceTime) + " единиц");
 }
 
-// Обработка прерывания (завершение операции)
+
 void DeviceDriver::handleInterrupt() {
     if (requestQueue.empty()) {
         printDeviceStatus("Нет запросов для обработки");
@@ -39,7 +37,6 @@ void DeviceDriver::handleInterrupt() {
     }
 }
 
-// Добавление запроса
 void DeviceDriver::addRequest(IORequest* request) {
     bool wasEmpty = requestQueue.empty();
     requestQueue.push(request);
@@ -49,12 +46,10 @@ void DeviceDriver::addRequest(IORequest* request) {
     }
 }
 
-// Проверка наличия запросов
 bool DeviceDriver::hasPendingRequests() const {
     return !requestQueue.empty();
 }
 
-// Вывод очереди запросов
 void DeviceDriver::printQueue() const {
     std::cout << "┌───────────────────────┐\n";
     std::cout << "│  Очередь запросов:    │\n";
@@ -71,7 +66,7 @@ void DeviceDriver::printQueue() const {
     std::cout << "└───────────────────────┘\n";
 }
 
-// Внутренний вывод статуса устройства
+
 void DeviceDriver::printDeviceStatus(const std::string& action, const std::string& details) const {
     std::cout << "\n╭── Драйвер устройства ──\n";
     std::cout << "│  " << std::left << std::setw(18) << action;
@@ -82,7 +77,6 @@ void DeviceDriver::printDeviceStatus(const std::string& action, const std::strin
     printQueue();
 }
 
-// Получить следующий запрос из очереди
 IORequest* DeviceDriver::getNextRequest() {
     if (requestQueue.empty()) return nullptr;
     IORequest* request = requestQueue.front();

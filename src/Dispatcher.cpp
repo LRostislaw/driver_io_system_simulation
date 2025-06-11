@@ -2,16 +2,13 @@
 #include <iostream>
 #include <iomanip>
 
-// Конструктор
 Dispatcher::Dispatcher() : nextRequestId(1) {
     std::srand(std::time(nullptr));
     printWelcome();
 }
 
-// Модуль моделирования
 void Dispatcher::run(int maxRequests) {
     while (nextRequestId <= maxRequests) {
-        // Иногда сразу несколько запросов
         if (std::rand() % 3 == 0) {
             int burst = getRandomInterval(1, 3);
             for (int i = 0; i < burst && nextRequestId <= maxRequests; i++) {
@@ -53,7 +50,6 @@ int Dispatcher::getRandomInterval(int min, int max) {
     return std::rand() % (max - min + 1) + min;
 }
 
-// Вывод приветствия
 void Dispatcher::printWelcome() const {
     std::cout << "\n╔══════════════════════════════════════╗\n";
     std::cout << "║  Система управления вводом-выводом  ║\n";

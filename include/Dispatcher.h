@@ -1,6 +1,3 @@
-#ifndef DISPATCHER_H
-#define DISPATCHER_H
-
 #include "DeviceDriver.h"
 #include <chrono>
 #include <thread>
@@ -11,7 +8,7 @@ class Dispatcher {
 
 public:
     Dispatcher();
-    void run(int maxRequests = 12); // ограничение по количеству запросов
+    void run(int maxRequests = 12); 
 
 private:
     void generateRequest();
@@ -21,5 +18,3 @@ private:
     void printWaitTime(int seconds) const;
     void printCompletion() const;
 };
-
-#endif

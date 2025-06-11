@@ -1,6 +1,3 @@
-#ifndef DEVICEDRIVER_H
-#define DEVICEDRIVER_H
-
 #include "IORequest.h"
 #include <queue>
 #include <string>
@@ -23,5 +20,3 @@ private:
     IORequest* getNextRequest();
     void printDeviceStatus(const std::string& action, const std::string& details = "") const;
 };
-
-#endif

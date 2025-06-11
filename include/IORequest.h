@@ -1,6 +1,3 @@
-#ifndef IOREQUEST_H
-#define IOREQUEST_H
-
 #include <iostream>
 #include <iomanip>
 
@@ -13,5 +10,3 @@ public:
         std::cout << "│  ├── Запрос IO [" << std::setw(2) << id << "]\n";
     }
 };
-
-#endif
